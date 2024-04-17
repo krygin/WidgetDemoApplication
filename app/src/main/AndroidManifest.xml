@@ -13,7 +13,7 @@
         android:theme="@style/Theme.WidgetDemoApplication"
         tools:targetApi="31">
         <receiver
-            android:name="android.appwidget.AppWidgetProvider"
+            android:name=".DemoAppWidget"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

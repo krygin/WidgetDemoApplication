@@ -1,5 +1,6 @@
 package ru.krygin.widget
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
@@ -12,29 +13,24 @@ import android.widget.RemoteViews
  * App Widget Configuration implemented in [DemoAppWidgetConfigureActivity]
  */
 class DemoAppWidget : AppWidgetProvider() {
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        Log.e("APP_WIDGET", "onUpdate")
-        // There may be multiple widgets active, so update all of them
-        for (appWidgetId in appWidgetIds) {
-//            updateAppWidget(context, appWidgetManager, appWidgetId)
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+
+        appWidgetIds.forEach { appWidgetId ->
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                Intent(context, MainActivity::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            val views: RemoteViews = RemoteViews(
+                context.packageName,
+                R.layout.demo_app_widget
+            ).apply {
+                setOnClickPendingIntent(R.id.demo_app_widget, pendingIntent)
+            }
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
-    }
-
-    override fun onReceive(context: Context?, intent: Intent?) {
-        Log.e("APP_WIDGET", "onReceive: $intent")
-        super.onReceive(context, intent)
-    }
-
-    override fun onEnabled(context: Context?) {
-        Log.e("APP_WIDGET", "onEnabled")
-    }
-
-    override fun onDisabled(context: Context?) {
-        Log.e("APP_WIDGET", "onDisabled")
     }
 }
 
